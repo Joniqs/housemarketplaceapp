@@ -1,9 +1,11 @@
 import { useState } from "react"
 import {Link, useNavigate} from "react-router-dom"
 import {getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import OAuth from "../components/OAuth";
 import {ReactComponent as ArrowRightIcon} from "../assets/svg/keyboardArrowRightIcon.svg"
 import visibilityIcon from "../assets/svg/visibilityIcon.svg"
 import { toast } from "react-toastify";
+
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -85,7 +87,7 @@ const SignIn = () => {
           </button>
         </div>
       </form>
-    { /* Google OAuth */}
+    <OAuth />
     <Link to="/sign-up" className="registerLink">
       Sign Up Instead
     </Link>
