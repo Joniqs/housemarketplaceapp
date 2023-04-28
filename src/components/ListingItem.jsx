@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg';
-import bedIcon from '../assets/svg/badgeIcon.svg';
+import { ReactComponent as EditIcon } from '../assets/svg/editIcon.svg';
+import bedIcon from '../assets/svg/bedIcon.svg';
 import bathtubIcon from '../assets/svg/bathtubIcon.svg';
 
-const ListingItem = ({ listing, id, onDelete }) => {
+function ListingItem({ listing, id, onEdit, onDelete }) {
   return (
     <li className='categoryListing'>
       <Link
@@ -11,15 +12,16 @@ const ListingItem = ({ listing, id, onDelete }) => {
         className='categoryListingLink'
       >
         <img
-          src={listing.imageUrls[0]}
+          src={listing.imgUrls[0]}
           alt={listing.name}
           className='categoryListingImg'
         />
         <div className='categoryListingDetails'>
           <p className='categoryListingLocation'>{listing.location}</p>
           <p className='categoryListingName'>{listing.name}</p>
+
           <p className='categoryListingPrice'>
-            £
+            $
             {listing.offer
               ? listing.discountedPrice
                   .toString()
@@ -49,12 +51,14 @@ const ListingItem = ({ listing, id, onDelete }) => {
       {onDelete && (
         <DeleteIcon
           className='removeIcon'
-          fill='rgb(231, 76, 60)'
+          fill='rgb(231, 76,60)'
           onClick={() => onDelete(listing.id, listing.name)}
         />
       )}
+
+      {onEdit && <EditIcon className='editIcon' onClick={() => onEdit(id)} />}
     </li>
   );
-};
+}
 
 export default ListingItem;
