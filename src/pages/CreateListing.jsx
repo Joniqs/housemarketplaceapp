@@ -3,23 +3,25 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
   getStorage,
   ref,
-  UploadBytesResumable,
-  getDownloadURL,
   uploadBytesResumable,
+  getDownloadURL,
 } from 'firebase/storage';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase.config';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import Spinner from '../components/Spinner';
 
-const CreateListing = () => {
-  const [loading, SetLoading] = useState(false);
+function CreateListing() {
+  // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
     bedrooms: 1,
-    bathrooms: '1',
+    bathrooms: 1,
     parking: false,
     furnished: false,
     address: '',
@@ -27,7 +29,7 @@ const CreateListing = () => {
     regularPrice: 0,
     discountedPrice: 0,
     images: {},
-    latitute: 0,
+    latitude: 0,
     longitude: 0,
   });
 
@@ -55,10 +57,7 @@ const CreateListing = () => {
     if (isMounted) {
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          setFormData({
-            ...formData,
-            userRef: user.uid,
-          });
+          setFormData({ ...formData, userRef: user.uid });
         } else {
           navigate('/sign-in');
         }
@@ -74,22 +73,22 @@ const CreateListing = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    SetLoading(true);
+    setLoading(true);
 
     if (discountedPrice >= regularPrice) {
-      SetLoading(false);
+      setLoading(false);
       toast.error('Discounted price needs to be less than regular price');
       return;
     }
 
     if (images.length > 6) {
-      SetLoading(false);
+      setLoading(false);
       toast.error('Max 6 images');
       return;
     }
 
     let geolocation = {};
-    let location = {};
+    let location;
 
     if (geolocationEnabled) {
       const response = await fetch(
@@ -98,8 +97,8 @@ const CreateListing = () => {
 
       const data = await response.json();
 
-      geolocation.lat = data.result[0]?.geometry.location.lat ?? 0;
-      geolocation.lng = data.result[0]?.geometry.location.lng ?? 0;
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
 
       location =
         data.status === 'ZERO_RESULTS'
@@ -107,16 +106,16 @@ const CreateListing = () => {
           : data.results[0]?.formatted_address;
 
       if (location === undefined || location.includes('undefined')) {
-        SetLoading(false);
+        setLoading(false);
         toast.error('Please enter a correct address');
         return;
       }
     } else {
       geolocation.lat = latitude;
       geolocation.lng = longitude;
-      location = address;
     }
 
+    // Store image in firebase
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
         const storage = getStorage();
@@ -157,7 +156,30 @@ const CreateListing = () => {
       });
     };
 
-    SetLoading(false);
+    const imgUrls = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch(() => {
+      setLoading(false);
+      toast.error('Images not uploaded');
+      return;
+    });
+
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      timestamp: serverTimestamp(),
+    };
+
+    formDataCopy.location = address;
+    delete formDataCopy.images;
+    delete formDataCopy.address;
+    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
+    setLoading(false);
+    toast.success('Listing saved');
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
   const onMutate = (e) => {
@@ -223,8 +245,8 @@ const CreateListing = () => {
 
           <label className='formLabel'>Name</label>
           <input
-            type='text'
             className='formInputName'
+            type='text'
             id='name'
             value={name}
             onChange={onMutate}
@@ -427,6 +449,6 @@ const CreateListing = () => {
       </main>
     </div>
   );
-};
+}
 
 export default CreateListing;
