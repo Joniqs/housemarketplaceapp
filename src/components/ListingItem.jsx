@@ -4,7 +4,7 @@ import { ReactComponent as EditIcon } from '../assets/svg/editIcon.svg';
 import bedIcon from '../assets/svg/bedIcon.svg';
 import bathtubIcon from '../assets/svg/bathtubIcon.svg';
 
-function ListingItem({ listing, id, onEdit, onDelete }) {
+const ListingItem = ({ listing, id, onEdit, onDelete }) => {
   return (
     <li className='categoryListing'>
       <Link
@@ -21,7 +21,7 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
           <p className='categoryListingName'>{listing.name}</p>
 
           <p className='categoryListingPrice'>
-            $
+            £
             {listing.offer
               ? listing.discountedPrice
                   .toString()
@@ -59,6 +59,6 @@ function ListingItem({ listing, id, onEdit, onDelete }) {
       {onEdit && <EditIcon className='editIcon' onClick={() => onEdit(id)} />}
     </li>
   );
-}
+};
 
 export default ListingItem;
