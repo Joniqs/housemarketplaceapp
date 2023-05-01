@@ -77,7 +77,7 @@ const Listing = () => {
 
       <div className='listingDetails'>
         <p className='listingName'>
-          {listing.name} - $
+          {listing.name} - £
           {listing.offer
             ? listing.discountedPrice
                 .toString()

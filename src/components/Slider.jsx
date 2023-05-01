@@ -71,7 +71,7 @@ const Slider = () => {
               >
                 <p className='swiperSlideText'>{data.name}</p>
                 <p className='swiperSlidePrice'>
-                  ${data.discountedPrice ?? data.regularPrice}{' '}
+                  £{data.discountedPrice ?? data.regularPrice}{' '}
                   {data.type === 'rent' && '/ month'}{' '}
                 </p>
               </div>
