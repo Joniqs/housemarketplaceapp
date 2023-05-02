@@ -5,10 +5,21 @@ import { db } from '../firebase.config';
 import { toast } from 'react-toastify';
 import googleIcon from '../assets/svg/googleIcon.svg';
 
+/**
+ * Component that renders a Google OAuth button for authentication.
+ * @component
+ */
 const OAuth = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  /**
+   * Handler function for the Google OAuth button click event.
+   * @async
+   * @function
+   * @throws {Error} Could not authorize with Google.
+   * @returns {Promise<void>}
+   */
   const onGoogleClick = async () => {
     try {
       const auth = getAuth();
@@ -16,7 +27,7 @@ const OAuth = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      //Check for user
+      // Check for user
       const docRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(docRef);
 
@@ -28,10 +39,12 @@ const OAuth = () => {
           timestamp: serverTimestamp,
         });
       }
+
       toast.success('Log In with Google Successfull');
       navigate('/');
     } catch (error) {
       toast.error('Could not authorize with Google');
+      throw new Error(error);
     }
   };
 

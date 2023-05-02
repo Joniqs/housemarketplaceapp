@@ -1,3 +1,12 @@
+/**
+ * Renders a single listing item for the category page.
+ * @param {Object} props - The component props.
+ * @param {Object} props.listing - The listing object to render.
+ * @param {string} props.id - The ID of the listing.
+ * @param {function} [props.onEdit] - Optional callback function for editing the listing.
+ * @param {function} [props.onDelete] - Optional callback function for deleting the listing.
+ * @returns {JSX.Element} A React component that renders the listing item.
+ */
 import { Link } from 'react-router-dom';
 import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg';
 import { ReactComponent as EditIcon } from '../assets/svg/editIcon.svg';

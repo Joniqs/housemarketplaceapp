@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/CreateListing.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/CreateListing.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Component for creating a new listing.
  * @function CreateListing
  * @returns {JSX.Element} - Rendered component.
@@ -118,7 +146,7 @@ const CreateListing = () => {
 
     if (geolocationEnabled) {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&amp;key=${process.env.REACT_APP_GEOCODE_API_KEY}`
       );
 
       const data = await response.json();
@@ -144,7 +172,7 @@ const CreateListing = () => {
     /**
      * Stores an image in Firebase.
      * @param {Object} image - The image object.
-     * @returns {Promise<string>} - The download URL of the image.
+     * @returns {Promise&lt;string>} - The download URL of the image.
      */
     const storeImage = async (image) => {
       return new Promise((resolve, reject) => {
@@ -204,7 +232,7 @@ const CreateListing = () => {
     formDataCopy.location = address;
     delete formDataCopy.images;
     delete formDataCopy.address;
-    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    !formDataCopy.offer &amp;&amp; delete formDataCopy.discountedPrice;
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy);
     setLoading(false);
@@ -244,20 +272,20 @@ const CreateListing = () => {
   };
 
   if (loading) {
-    return <Spinner />;
+    return &lt;Spinner />;
   }
 
   return (
-    <div className='profile'>
-      <header>
-        <p className='pageHeader'>Create a Listing</p>
-      </header>
+    &lt;div className='profile'>
+      &lt;header>
+        &lt;p className='pageHeader'>Create a Listing&lt;/p>
+      &lt;/header>
 
-      <main>
-        <form onSubmit={onSubmit}>
-          <label className='formLabel'>Sell / Rent</label>
-          <div className='formButtons'>
-            <button
+      &lt;main>
+        &lt;form onSubmit={onSubmit}>
+          &lt;label className='formLabel'>Sell / Rent&lt;/label>
+          &lt;div className='formButtons'>
+            &lt;button
               type='button'
               className={type === 'sale' ? 'formButtonActive' : 'formButton'}
               id='type'
@@ -265,8 +293,8 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               Sell
-            </button>
-            <button
+            &lt;/button>
+            &lt;button
               type='button'
               className={type === 'rent' ? 'formButtonActive' : 'formButton'}
               id='type'
@@ -274,11 +302,11 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               Rent
-            </button>
-          </div>
+            &lt;/button>
+          &lt;/div>
 
-          <label className='formLabel'>Name</label>
-          <input
+          &lt;label className='formLabel'>Name&lt;/label>
+          &lt;input
             className='formInputName'
             type='text'
             id='name'
@@ -289,10 +317,10 @@ const CreateListing = () => {
             required
           />
 
-          <div className='formRooms flex'>
-            <div>
-              <label className='formLabel'>Bedrooms</label>
-              <input
+          &lt;div className='formRooms flex'>
+            &lt;div>
+              &lt;label className='formLabel'>Bedrooms&lt;/label>
+              &lt;input
                 className='formInputSmall'
                 type='number'
                 id='bedrooms'
@@ -302,10 +330,10 @@ const CreateListing = () => {
                 max='50'
                 required
               />
-            </div>
-            <div>
-              <label className='formLabel'>Bathrooms</label>
-              <input
+            &lt;/div>
+            &lt;div>
+              &lt;label className='formLabel'>Bathrooms&lt;/label>
+              &lt;input
                 className='formInputSmall'
                 type='number'
                 id='bathrooms'
@@ -315,12 +343,12 @@ const CreateListing = () => {
                 max='50'
                 required
               />
-            </div>
-          </div>
+            &lt;/div>
+          &lt;/div>
 
-          <label className='formLabel'>Parking spot</label>
-          <div className='formButtons'>
-            <button
+          &lt;label className='formLabel'>Parking spot&lt;/label>
+          &lt;div className='formButtons'>
+            &lt;button
               className={parking ? 'formButtonActive' : 'formButton'}
               type='button'
               id='parking'
@@ -330,10 +358,10 @@ const CreateListing = () => {
               max='50'
             >
               Yes
-            </button>
-            <button
+            &lt;/button>
+            &lt;button
               className={
-                !parking && parking !== null ? 'formButtonActive' : 'formButton'
+                !parking &amp;&amp; parking !== null ? 'formButtonActive' : 'formButton'
               }
               type='button'
               id='parking'
@@ -341,12 +369,12 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               No
-            </button>
-          </div>
+            &lt;/button>
+          &lt;/div>
 
-          <label className='formLabel'>Furnished</label>
-          <div className='formButtons'>
-            <button
+          &lt;label className='formLabel'>Furnished&lt;/label>
+          &lt;div className='formButtons'>
+            &lt;button
               className={furnished ? 'formButtonActive' : 'formButton'}
               type='button'
               id='furnished'
@@ -354,10 +382,10 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               Yes
-            </button>
-            <button
+            &lt;/button>
+            &lt;button
               className={
-                !furnished && furnished !== null
+                !furnished &amp;&amp; furnished !== null
                   ? 'formButtonActive'
                   : 'formButton'
               }
@@ -367,11 +395,11 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               No
-            </button>
-          </div>
+            &lt;/button>
+          &lt;/div>
 
-          <label className='formLabel'>Address</label>
-          <textarea
+          &lt;label className='formLabel'>Address&lt;/label>
+          &lt;textarea
             className='formInputAddress'
             type='text'
             id='address'
@@ -380,11 +408,11 @@ const CreateListing = () => {
             required
           />
 
-          {!geolocationEnabled && (
-            <div className='formLatLng flex'>
-              <div>
-                <label className='formLabel'>Latitude</label>
-                <input
+          {!geolocationEnabled &amp;&amp; (
+            &lt;div className='formLatLng flex'>
+              &lt;div>
+                &lt;label className='formLabel'>Latitude&lt;/label>
+                &lt;input
                   className='formInputSmall'
                   type='number'
                   id='latitude'
@@ -392,10 +420,10 @@ const CreateListing = () => {
                   onChange={onMutate}
                   required
                 />
-              </div>
-              <div>
-                <label className='formLabel'>Longitude</label>
-                <input
+              &lt;/div>
+              &lt;div>
+                &lt;label className='formLabel'>Longitude&lt;/label>
+                &lt;input
                   className='formInputSmall'
                   type='number'
                   id='longitude'
@@ -403,13 +431,13 @@ const CreateListing = () => {
                   onChange={onMutate}
                   required
                 />
-              </div>
-            </div>
+              &lt;/div>
+            &lt;/div>
           )}
 
-          <label className='formLabel'>Offer</label>
-          <div className='formButtons'>
-            <button
+          &lt;label className='formLabel'>Offer&lt;/label>
+          &lt;div className='formButtons'>
+            &lt;button
               className={offer ? 'formButtonActive' : 'formButton'}
               type='button'
               id='offer'
@@ -417,10 +445,10 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               Yes
-            </button>
-            <button
+            &lt;/button>
+            &lt;button
               className={
-                !offer && offer !== null ? 'formButtonActive' : 'formButton'
+                !offer &amp;&amp; offer !== null ? 'formButtonActive' : 'formButton'
               }
               type='button'
               id='offer'
@@ -428,12 +456,12 @@ const CreateListing = () => {
               onClick={onMutate}
             >
               No
-            </button>
-          </div>
+            &lt;/button>
+          &lt;/div>
 
-          <label className='formLabel'>Regular Price</label>
-          <div className='formPriceDiv'>
-            <input
+          &lt;label className='formLabel'>Regular Price&lt;/label>
+          &lt;div className='formPriceDiv'>
+            &lt;input
               className='formInputSmall'
               type='number'
               id='regularPrice'
@@ -443,13 +471,13 @@ const CreateListing = () => {
               max='750000000'
               required
             />
-            {type === 'rent' && <p className='formPriceText'>£ / Month</p>}
-          </div>
+            {type === 'rent' &amp;&amp; &lt;p className='formPriceText'>£ / Month&lt;/p>}
+          &lt;/div>
 
-          {offer && (
-            <>
-              <label className='formLabel'>Discounted Price</label>
-              <input
+          {offer &amp;&amp; (
+            &lt;>
+              &lt;label className='formLabel'>Discounted Price&lt;/label>
+              &lt;input
                 className='formInputSmall'
                 type='number'
                 id='discountedPrice'
@@ -459,14 +487,14 @@ const CreateListing = () => {
                 max='750000000'
                 required={offer}
               />
-            </>
+            &lt;/>
           )}
 
-          <label className='formLabel'>Images</label>
-          <p className='imagesInfo'>
+          &lt;label className='formLabel'>Images&lt;/label>
+          &lt;p className='imagesInfo'>
             The first image will be the cover (max 6).
-          </p>
-          <input
+          &lt;/p>
+          &lt;input
             className='formInputFile'
             type='file'
             id='images'
@@ -476,13 +504,36 @@ const CreateListing = () => {
             multiple
             required
           />
-          <button type='submit' className='primaryButton createListingButton'>
+          &lt;button type='submit' className='primaryButton createListingButton'>
             Create Listing
-          </button>
-        </form>
-      </main>
-    </div>
+          &lt;/button>
+        &lt;/form>
+      &lt;/main>
+    &lt;/div>
   );
 };
 
 export default CreateListing;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Contact">Contact</a></li><li><a href="global.html#CreateListing">CreateListing</a></li><li><a href="global.html#OAuth">OAuth</a></li><li><a href="global.html#Spinner">Spinner</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue May 02 2023 16:28:28 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
