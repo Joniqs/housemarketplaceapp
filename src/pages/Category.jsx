@@ -1,9 +1,10 @@
 /**
- * Renders a page displaying offers.
+ * React component that renders the listings for a particular category.
  *
- * @returns {JSX.Element} The offers page.
+ * @returns {JSX.Element} The JSX element that represents the category component.
  */
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   collection,
   getDocs,
@@ -18,38 +19,37 @@ import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner';
 import ListingItem from '../components/ListingItem';
 
-const Offers = () => {
-  // States
+const Category = () => {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastFetchedListing, setLastFetchedListing] = useState(null);
 
+  const params = useParams();
   /**
-   * Fetches the initial listings and sets the state.
+   * Fetches the listings for the current category.
+   *
+   * @async
+   * @function
    */
   useEffect(() => {
-    /**
-     * Fetches the listings from the database.
-     *
-     * @returns {Promise<void>}
-     */
     const fetchListings = async () => {
       try {
-        // Get reference
+        //Get reference
         const listingsRef = collection(db, 'listings');
 
-        // Create a query
+        //Create a query
         const q = query(
           listingsRef,
-          where('offer', '==', true),
+          where('type', '==', params.categoryName),
           orderBy('timestamp', 'desc'),
           limit(10)
         );
 
-        // Execute query
+        //Execute query
         const querySnap = await getDocs(q);
 
         const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+
         setLastFetchedListing(lastVisible);
 
         const listings = [];
@@ -64,36 +64,33 @@ const Offers = () => {
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error('Could not fetch listings');
+        toast.error("Couldn't get listings, Sorry!");
       }
     };
 
     fetchListings();
-  }, []);
+  }, [params.categoryName]);
 
-  /**
-   * Fetches more listings for pagination.
-   *
-   * @returns {Promise<void>}
-   */
+  // Pagination
   const onFetchMoreListings = async () => {
     try {
-      // Get reference
+      //Get reference
       const listingsRef = collection(db, 'listings');
 
-      // Create a query
+      //Create a query
       const q = query(
         listingsRef,
-        where('offer', '==', true),
+        where('type', '==', params.categoryName),
         orderBy('timestamp', 'desc'),
         startAfter(lastFetchedListing),
         limit(10)
       );
 
-      // Execute query
+      //Execute query
       const querySnap = await getDocs(q);
 
       const lastVisible = querySnap.docs[querySnap.docs.length - 1];
+
       setLastFetchedListing(lastVisible);
 
       const listings = [];
@@ -108,14 +105,18 @@ const Offers = () => {
       setListings((prevState) => [...prevState, ...listings]);
       setLoading(false);
     } catch (error) {
-      toast.error('Could not fetch listings');
+      toast.error("Couldn't get listings, Sorry!");
     }
   };
 
   return (
     <div className='category'>
       <header>
-        <p className='pageHeader'>Offers</p>
+        <p className='pageHeader'>
+          {params.categoryName === 'rent'
+            ? 'Places for rent'
+            : 'Places for sale'}
+        </p>
       </header>
 
       {loading ? (
@@ -133,7 +134,6 @@ const Offers = () => {
               ))}
             </ul>
           </main>
-
           <br />
           <br />
           {lastFetchedListing && (
@@ -143,10 +143,10 @@ const Offers = () => {
           )}
         </>
       ) : (
-        <p>There are no current offers</p>
+        <p>No listings for {params.categoryName}</p>
       )}
     </div>
   );
 };
 
-export default Offers;
+export default Category;
