@@ -1,3 +1,7 @@
+/**
+ * A component that displays a slider with recommended listings fetched from Firebase.
+ * @returns {JSX.Element} JSX element
+ */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
@@ -11,11 +15,12 @@ import 'swiper/css/a11y';
 import Spinner from './Spinner';
 
 const Slider = () => {
+  // state variables and hooks
   const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState(null);
-
   const navigate = useNavigate();
 
+  // fetches listings from Firebase
   useEffect(() => {
     const fetchListings = async () => {
       const listingsRef = collection(db, 'listings');
@@ -38,14 +43,17 @@ const Slider = () => {
     fetchListings();
   }, []);
 
+  // displays spinner while loading
   if (loading) {
     return <Spinner />;
   }
 
+  // displays nothing if there are no listings
   if (listings.length === 0) {
     return <></>;
   }
 
+  // displays the slider with recommended listings
   return (
     <>
       <p className='exploreHeading'>Recommended</p>

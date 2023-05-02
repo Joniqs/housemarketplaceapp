@@ -4,6 +4,11 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import { toast } from 'react-toastify';
 
+/**
+ * Contact component to send a message to a landlord
+ *
+ * @returns {JSX.Element} JSX element
+ */
 const Contact = () => {
   const [message, setMessage] = useState('');
   const [landlord, setLandlord] = useState(null);
@@ -12,7 +17,14 @@ const Contact = () => {
 
   const params = useParams();
 
+  /**
+   * Fetches landlord information from Firestore database
+   */
   useEffect(() => {
+    /**
+     * Asynchronous function to fetch landlord information from Firestore
+     * @returns {Promise<void>}
+     */
     const getLandlord = async () => {
       const docRef = doc(db, 'users', params.landlordId);
       const docSnap = await getDoc(docRef);
@@ -27,6 +39,10 @@ const Contact = () => {
     getLandlord();
   }, [params.landlordId]);
 
+  /**
+   * Event handler to update message state on change of input value
+   * @param {Object} e - event object
+   */
   const onChange = (e) => setMessage(e.target.value);
 
   return (

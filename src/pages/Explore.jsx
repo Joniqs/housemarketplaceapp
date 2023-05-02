@@ -1,3 +1,7 @@
+/**
+ * The Explore component displays a page for exploring different categories of places.
+ * It includes a slider and two categories: "Places for rent" and "Places for sell".
+ */
 import { Link } from 'react-router-dom';
 import Slider from '../components/Slider';
 import rentCategoryImage from '../assets/jpg/rentCategoryImage.jpg';
