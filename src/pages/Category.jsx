@@ -1,3 +1,8 @@
+/**
+ * React component that renders the listings for a particular category.
+ *
+ * @returns {JSX.Element} The JSX element that represents the category component.
+ */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
@@ -20,7 +25,12 @@ const Category = () => {
   const [lastFetchedListing, setLastFetchedListing] = useState(null);
 
   const params = useParams();
-
+  /**
+   * Fetches the listings for the current category.
+   *
+   * @async
+   * @function
+   */
   useEffect(() => {
     const fetchListings = async () => {
       try {

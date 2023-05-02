@@ -1,3 +1,8 @@
+/**
+ * Renders a detailed view of a property listing, including a photo carousel, map with marker, and listing details.
+ *
+ * @component
+ */
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
@@ -14,15 +19,51 @@ import Spinner from '../components/Spinner';
 import shareIcon from '../assets/svg/shareIcon.svg';
 
 const Listing = () => {
+  /**
+   * The listing data to be displayed, retrieved from the Firestore database.
+   * @type {Object}
+   * @property {string} name - The name of the listing.
+   * @property {string} location - The location of the listing.
+   * @property {string} type - The type of the listing, either "rent" or "sale".
+   * @property {number} bedrooms - The number of bedrooms in the listing.
+   * @property {number} bathrooms - The number of bathrooms in the listing.
+   * @property {boolean} parking - Whether or not the listing includes a parking spot.
+   * @property {boolean} furnished - Whether or not the listing is furnished.
+   * @property {number} regularPrice - The regular price of the listing.
+   * @property {number} discountedPrice - The discounted price of the listing, if applicable.
+   * @property {string[]} imgUrls - An array of URLs for the listing's photos.
+   * @property {Object} geolocation - An object containing the latitude and longitude of the listing's location.
+   * @property {number} geolocation.lat - The latitude of the listing's location.
+   * @property {number} geolocation.lng - The longitude of the listing's location.
+   * @property {string} userRef - The ID of the user who created the listing.
+   */
   const [listing, setListing] = useState(null);
+  /**
+   * Whether or not the listing is still being fetched from the database.
+   * @type {boolean}
+   */
   const [loading, setLoading] = useState(true);
+  /**
+   * Whether or not the share link has been copied to the clipboard.
+   * @type {?boolean}
+   */
   const [shareLinkCopied, setShareLinkCopied] = useState(null);
 
   const navigate = useNavigate();
   const params = useParams();
   const auth = getAuth();
 
+  /**
+   * Fetches the listing data from the Firestore database and updates the `listing` and `loading` states accordingly.
+   *
+   * @async
+   */
   useEffect(() => {
+    /**
+     * Fetches the listing data from the Firestore database.
+     *
+     * @async
+     */
     const fetchListing = async () => {
       const docRef = doc(db, 'listings', params.listingId);
       const docSnap = await getDoc(docRef);
@@ -36,10 +77,20 @@ const Listing = () => {
     fetchListing();
   }, [navigate, params.listingId]);
 
+  /**
+   * Renders a loading spinner if the listing is still being fetched from the database, otherwise renders the listing details.
+   *
+   * @returns {JSX.Element} The component to be rendered.
+   */
   if (loading) {
     return <Spinner />;
   }
 
+  /**
+   * Renders the listing details.
+   *
+   * @returns {JSX.Element} The component to be rendered.
+   */
   return (
     <main>
       <Swiper

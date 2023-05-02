@@ -1,3 +1,7 @@
+/**
+ * EditListing component for updating an existing listing
+ * @component
+ */
 import { useState, useEffect, useRef } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import {
@@ -18,6 +22,23 @@ const EditListing = () => {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(null);
+  /**
+   * @typedef {Object} FormData
+   * @property {string} type - Listing type (e.g., rent, sale)
+   * @property {string} name - Listing name
+   * @property {number} bedrooms - Number of bedrooms
+   * @property {number} bathrooms - Number of bathrooms
+   * @property {boolean} parking - Whether parking is available or not
+   * @property {boolean} furnished - Whether the listing is furnished or not
+   * @property {string} address - Listing address
+   * @property {boolean} offer - Whether there is a discount or not
+   * @property {number} regularPrice - Regular price
+   * @property {number} discountedPrice - Discounted price
+   * @property {FileList} images - List of uploaded images
+   * @property {number} latitude - Listing latitude
+   * @property {number} longitude - Listing longitude
+   * @property {string} userRef - Reference to the user that owns the listing
+   */
   const [formData, setFormData] = useState({
     type: 'rent',
     name: '',
@@ -55,7 +76,12 @@ const EditListing = () => {
   const params = useParams();
   const isMounted = useRef(true);
 
-  // Redirect if listing is not user's
+  /**
+   * Redirect if listing is not user's
+   * @function
+   * @memberof EditListing
+   * @inner
+   */
   useEffect(() => {
     if (listing && listing.userRef !== auth.currentUser.uid) {
       toast.error('You cannot edit that elisting');
@@ -63,9 +89,20 @@ const EditListing = () => {
     }
   });
 
-  // Fetch listing to edit
+  /**
+   * Fetches listing to edit
+   * @function
+   * @memberof EditListing
+   * @inner
+   */
   useEffect(() => {
     setLoading(true);
+    /**
+     * Async function that fetches the listing to edit from Firestore
+     * @function
+     * @memberof EditListing
+     * @inner
+     */
     const fetchListing = async () => {
       const docRef = doc(db, 'listings', params.listingId);
       const docSnap = await getDoc(docRef);
@@ -82,7 +119,12 @@ const EditListing = () => {
     fetchListing();
   }, [navigate, params.listingId]);
 
-  // Sets userRef to logged in user
+  /**
+   * Sets userRef to logged in user
+   * @function
+   * @memberof EditListing
+   * @inner
+   */
   useEffect(() => {
     if (isMounted) {
       onAuthStateChanged(auth, (user) => {
@@ -100,6 +142,13 @@ const EditListing = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
+  /**
+   * Handles the form submission when the user submits the form.
+   *
+   * @async
+   * @function
+   * @param {Event} e - The event object.
+   */
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -214,6 +263,12 @@ const EditListing = () => {
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
+  /**
+   * Handles updates to the form data when the user enters new data.
+   *
+   * @function
+   * @param {Event} e - The event object.
+   */
   const onMutate = (e) => {
     let boolean = null;
 
@@ -244,6 +299,12 @@ const EditListing = () => {
   if (loading) {
     return <Spinner />;
   }
+
+  /**
+   * Renders the component.
+   *
+   * @returns {JSX.Element} - The component's elements.
+   */
 
   return (
     <div className='profile'>
