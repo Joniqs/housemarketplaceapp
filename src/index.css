@@ -506,6 +506,22 @@ button {
   align-items: center;
 }
 
+.shareWhatsApp {
+  cursor: pointer;
+  position: fixed;
+  top: 3%;
+  right: 11%;
+  color: #00cc66;
+  z-index: 2;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .listingName {
   font-weight: 600;
   font-size: 1.5rem;
@@ -823,4 +839,22 @@ button {
   margin-left: 1rem;
   font-size: 0.8rem;
   opacity: 0.75;
+}
+
+@media screen and (max-width: 767px) {
+  .shareWhatsApp {
+    cursor: pointer;
+    position: fixed;
+    top: 3%;
+    right: 19%;
+    color: #00cc66;
+    z-index: 2;
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
