@@ -17,6 +17,7 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../firebase.config';
 import Spinner from '../components/Spinner';
 import shareIcon from '../assets/svg/shareIcon.svg';
+import WhatsAppShare from '../components/WhatsAppShare';
 
 const Listing = () => {
   /**
@@ -122,6 +123,13 @@ const Listing = () => {
         }}
       >
         <img src={shareIcon} alt='' />
+      </div>
+
+      <div className='shareWhatsApp'>
+        <WhatsAppShare
+          url={'/category/:categoryName/:listingId'}
+          title={'Check out this rent/sale offer !'}
+        />
       </div>
 
       {shareLinkCopied && <p className='linkCopied'>Link Copied!</p>}
