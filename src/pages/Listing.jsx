@@ -127,7 +127,7 @@ const Listing = () => {
 
       <div className='shareWhatsApp'>
         <WhatsAppShare
-          url={`/category/${categoryName}/${listingId}`}
+          url={`/category/${params.categoryName}/${params.listingId}`}
           title={'Check out this rent/sale offer !'}
         />
       </div>
