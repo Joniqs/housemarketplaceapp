@@ -1,70 +1,161 @@
-# Getting Started with Create React App
+# Housemarketplace App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Demo
 
-## Available Scripts
+![Alt text](./src/assets/png/demo_image.png)
 
-In the project directory, you can run:
+**Starting Page**
 
-### `npm start`
+![Alt text](./src/assets/png/demo_profile.png)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Profile Page**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![Alt text](./src/assets/png/demo_listings.png)
 
-### `npm test`
+**Listings Page**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Alt text](./src/assets/png/demo_details.png)
 
-### `npm run build`
+**Details Page**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation and Configuration
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Make sure you have nodejs installed on your computer. After that clone this repository to your computer.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    git clone git@github.com:Joniqs/housemarketplaceapp.git
 
-### `npm run eject`
+Move to your repository
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    cd housemarketplaceapp
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Make sure you have node modules installed in the same folder before running this program:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    npm install
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+You need to set your googleAuth, get geolocation API key and set your firebase in order to install and use this app. The listings use Google geocoding to get the coords from the address field. You need to add your Google Geocode API key OR in the CreateListing.jsx file you can set geolocationEnabled to "false" and it will add a lat/lng field to the form.
 
-## Learn More
+1. Create a Firebase project:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Go to the Firebase Console and create a new project or select an existing project.
+- Make sure you have set up your Firebase project and configured your app to use Firebase Hosting and the Realtime Database or Firestore.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Enable Google Authentication:
 
-### Code Splitting
+- In the Firebase Console, navigate to the Authentication section.
+- Select the "Sign-in method" tab.
+- Find the "Google" provider and click on the toggle to enable it.
+- Configure any additional settings as needed.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. Create a Firebase configuration file:
 
-### Analyzing the Bundle Size
+- In your React.js app, create a file named firebaseConfig.js or similar.
+- In the Firebase Console, go to the project settings.
+- Under the "General" tab, scroll down to find the Firebase SDK snippet.
+- Copy the config object containing your Firebase project's credentials (apiKey, authDomain, etc.).
+- Paste the config object into your firebaseConfig.js file.
+- Export the config object as a module.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. Install Firebase and required dependencies:
 
-### Making a Progressive Web App
+- In your React.js project, install the Firebase SDK and related dependencies:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+    npm install firebase
+```
 
-### Advanced Configuration
+5. Create your collection 'listings'
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+6. Add fields to your 'listings' collection:
 
-### Deployment
+- bathrooms: string
+- bedrooms: string
+- discountedPrice: string
+- furnished: boolean
+- geolocation: map
+  - lat
+  - lng
+- imgUrls: array
+- latitude: number
+- location: string
+- longitude: number
+- name: string
+- offer: boolean
+- parking: boolean
+- regularPrice: string
+- timestamp: timestamp
+- type: string
+- userRef: string
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+7. Create 'users' collection
 
-### `npm run build` fails to minify
+8. Add fields to 'users' collection
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- email: string
+- name: string
+- timestamp: timestamp
+
+9. Add Firestore Rules
+
+```bash
+// FIRESTORE RULES
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Listings
+    match /listings/{listing} {
+    	allow read;
+      allow create: if request.auth != null && request.resource.data.imgUrls.size() < 7;
+    	allow delete: if resource.data.userRef == request.auth.uid;
+      allow update: if resource.data.userRef == request.auth.uid;
+    }
+
+    // Users
+    match /users/{user} {
+    	allow read;
+    	allow create;
+    	allow update: if request.auth.uid == user
+    }
+  }
+}
+
+
+// STORAGE RULES
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read;
+      allow write: if
+      request.auth != null &&
+      request.resource.size < 2 * 1024 * 1024 && //2MB
+      request.resource.contentType.matches('image/.*')
+    }
+  }
+}
+```
+
+10. Create .env file so it works locally:
+
+```bash
+    REACT_APP_GEOCODE_API_KEY = "your_geocode_api_key"
+    REACT_APP_FIREBASE_AUTH_DOMAIN = 'your_firebase_auth_domain'
+    REACT_APP_FIREBASE_PROJECT_ID = 'your_firebase_project_id'
+    REACT_APP_FIREBASE_STORAGE_BUCKET = 'your_firebase_storage_bucket'
+    REACT_APP_FIREBASE_API_KEY = "your_firebase_api_key"
+    REACT_APP_APP_ID = "your_app_id"
+    REACT_APP_MESSAGING_SENDER_ID = "your_messaging_sender_id"
+```
+
+## Usage/Examples
+
+You can add your own listings for rent/sale properties, upload pictures.
+
+## Credits
+
+Jonatan Kwiatkowski
+
+# License
+
+Please refer to the LICENSE in the repo.
